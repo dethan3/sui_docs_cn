@@ -1,3 +1,5 @@
+# Sui 中文文档
+
 ## 概述 Overview 
 
 本目录包含构建和更新 [Sui 文档](https://docs.sui.io) 所需的资源。目录分为 `content` 和 `site` 两部分。要在本地运行 docs.sui.io 网站，请在终端或控制台中打开 `site` 目录。使用包管理器安装所需模块：
@@ -27,15 +29,15 @@ Next, use the following command to deploy a development preview of the site to `
 ```shell
 pnpm start
 ```
-> 如果您在本地运行站点时收到提示缺少 open-rpc 规范文件的错误，请先运行 pnpm build。这将准备必要文件并解决该问题。
+> 如果你在本地运行站点时收到提示缺少 open-rpc 规范文件的错误，请先运行 pnpm build。这将准备必要文件并解决该问题。
 
 > If you're running the site locally and getting an error saying that you don't have `open-rpc` specs, run `pnpm build` first. It will prepare the files and fix the issue.
 
-部署后会监视 `content` 目录（以及站点源文件）的更新，并根据您保存的更改实时更新界面。
+部署后会监视 `content` 目录（以及站点源文件）的更新，并根据你保存的更改实时更新界面。
 
 The deployment watches for updates to files in the `content` directory (and site source files), updating the UI to match any saves you make. 
 
-完成更改后，您应该再次运行 `pnpm build`。这将构建静态站点并将文件放置在 `site\build` 目录中。在提交更改以供审查之前，这一步很重要，因为构建过程会检查错误（如无效的内部链接），并在控制台显示错误原因。开发预览版会忽略此类错误以提供更灵活的开发环境。
+完成更改后，你应该再次运行 `pnpm build`。这将构建静态站点并将文件放置在 `site\build` 目录中。在提交更改以供审查之前，这一步很重要，因为构建过程会检查错误（如无效的内部链接），并在控制台显示错误原因。开发预览版会忽略此类错误以提供更灵活的开发环境。
 
 Once you've finished making changes, you should again run `pnpm build`. This builds the static site and places the files in `site\build`. This is important to run before submitting your changes for review, because a build will fail on errors like bad internal links, displaying the cause of the error to the console. The development preview ignores such errors to provide a more agile environment.
 
@@ -45,11 +47,11 @@ Sui Foundation is not able to provide support for building the documentation sit
 
 ## 拉取请求 Pull requests
 
-Sui 使用 Vercel 托管其文档站点。Vercel 会为提交到 Sui 仓库的每个拉取请求构建文档预览。您可以在 PR 评论区找到来自 Vercel 机器人的预览链接。点击 **sui-core** 项目的 **Visit Preview** 链接可以验证您的更改是否达到预期效果。
+Sui 使用 Vercel 托管其文档站点。Vercel 会为提交到 Sui 仓库的每个拉取请求构建文档预览。你可以在 PR 评论区找到来自 Vercel 机器人的预览链接。点击 **sui-core** 项目的 **Visit Preview** 链接可以验证你的更改是否达到预期效果。
 
 Sui uses Vercel to host its documentation site. Vercel builds a preview of the documentation for every pull request submitted to the Sui repo. You can find a link to this preview in the PR comment section from the Vercel bot. Click the **Visit Preview** link for the **sui-core** project to verify your changes behave as you expect.
 
-如果您想在更改准备就绪前查看 Vercel 预览，可以将您的 PR 标记为草稿。
+如果你想在更改准备就绪前查看 Vercel 预览，可以将你的 PR 标记为草稿。
 
 If you'd like to view the Vercel preview before your changes are ready for review, then [mark your PR as a draft](https://github.blog/2019-02-14-introducing-draft-pull-requests/).
 

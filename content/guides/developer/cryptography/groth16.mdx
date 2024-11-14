@@ -2,125 +2,128 @@
 title: Groth16
 ---
 
-零知识证明允许证明者验证一个陈述是否为真，而无需透露有关输入的任何信息。例如，证明者可以验证他们知道数独谜题的解决方案，而不透露解决方案。
+A zero-knowledge proof allows a prover to validate that a statement is true without revealing any information about the inputs. For example, a prover can validate that they know the solution to a sudoku puzzle without revealing the solution.
 
-零知识简洁非交互知识论证（zk-SNARKs）是一类零知识证明，它们是非交互式的，具有简洁的证明大小和高效的验证时间。其中一个重要且广泛使用的变体是基于配对的 zk-SNARKs，例如 [Groth16](https://eprint.iacr.org/2016/260.pdf) 证明系统，它是最高效且广泛使用的之一。
+Zero-knowledge succinct non-interactive argument of knowledge (zk-SNARKs) are a family of zero-knowledge proofs that are non-interactive, have succinct proof size and efficient verification time. An important and widely used variant of them is pairing-based zk-SNARKs like the [Groth16](https://eprint.iacr.org/2016/260.pdf) proof system, which is one of the most efficient and widely used.
 
-Sui 中的 Move API 使你能够使用 Groth16 zk-SNARKs 在 BN254 或 BLS12-381 椭圆曲线构造上高效验证可以用 NP 完全语言表示的任何陈述。
+The Move API in Sui enables you to verify any statement that can be expressed in a NP-complete language efficiently using Groth16 zk-SNARKs over either the BN254 or BLS12-381 elliptic curve constructions.
 
-有一些用于表达这些陈述的高级语言，例如 [Circom](https://docs.circom.io)，在以下示例中使用。
+There are high-level languages for expressing these statements, such as [Circom](https://docs.circom.io), used in the following example.
 
-Groth16 需要为每个电路进行可信设置，以生成验证密钥。API 不钉住任何特定的验证密钥，每个用户都可以为其应用程序生成自己的参数或使用现有的验证密钥。
+Groth16 requires a trusted setup for each circuit to generate the verification key. The API is not pinning any particular verification key and each user can generate their own parameters or use an existing verification to their apps.
 
-## 用法
+## Usage
 
-以下示例演示了如何从 Circom 中编写的陈述中创建 Groth16 证明，然后使用 Sui Move API 进行验证。API 当前支持最多八个公共输入。
+The following example demonstrates how to create a Groth16 proof from a statement written in Circom and then verify it using the Sui Move API. The API currently supports up to eight public inputs.
 
-### 创建电路
+### Create circuit
 
-该证明表明我们知道哈希函数的秘密输入，该输入给出某个公共输出。
+In this example, we crate a proof which demonstrates that we know a factorisation `a * b = c` of a publicly known number `c` without revealing `a` and `b`.
 
 ```circom
 pragma circom 2.1.5;
 
-include "node_modules/circomlib/circuits/poseidon.circom";
-
 template Main() {
-    component poseidon = Poseidon(1);
-    signal input in;
-    signal output digest;
-    poseidon.inputs[0] <== in;
-    digest <== poseidon.out;
-}
+    signal input a;
+    signal input b;
+    signal output c;
 
+    c <== a * b;
+}
 component main = Main();
 ```
-
-我们使用 [Poseidon 哈希函数](https://www.poseidon-hash.info)，这是一种 ZK-friendly 的哈希函数。假设已经安装了 [circom 编译器](https://docs.circom.io/getting-started/installation/)，可以使用以下命令编译上述电路：
-
+Assuming that the [circom compiler has been installed](https://docs.circom.io/getting-started/installation/), the above circuit is compiled using the following command:
 ```shell
 circom main.circom --r1cs --wasm
-
 ```
+This outputs the constraints in R1CS format and the circuit in Wasm format.
 
-这将输出 R1CS 格式的约束和 Wasm 格式的电路。
+### Generate proof
 
-### 生成证明
-
-要生成在 Sui 中可验证的证明，你需要生成一个见证。此示例使用 Arkworks 的 [ark-circom](https://github.com/gakonst/ark-circom) Rust 库。该代码为电路构建了一个见证，并为给定的输入生成了一个证明。最后，它验证了证明的正确性。
+To generate a proof verifiable in Sui, you need to generate a witness. This example uses Arkworks' [ark-circom](https://github.com/gakonst/ark-circom) Rust library. The code constructs a witness for the circuit and generates a proof for it for a given input. Finally, it verifies that the proof is correct.
 
 ```rust
 use ark_bn254::Bn254;
 use ark_circom::CircomBuilder;
 use ark_circom::CircomConfig;
-use ark_groth16::Groth16;
+use ark_groth16::{Groth16, prepare_verifying_key};
+use ark_serialize::CanonicalSerialize;
 use ark_snark::SNARK;
+use rand::rngs::StdRng;
+use rand::SeedableRng;
 
 fn main() {
     // Load the WASM and R1CS for witness and proof generation
-    let cfg = CircomConfig::<Bn254>::new("main.wasm", "main.r1cs").unwrap();
-
-    // Insert our secret inputs as key value pairs. We insert a single input, namely the input to the hash function.
+    let cfg = CircomConfig::<Bn254>::new("../circuit/main_js/main.wasm", "../circuit/main.r1cs").unwrap();
     let mut builder = CircomBuilder::new(cfg);
-    builder.push_input("in", 7);
 
-    // Create an empty instance for setting it up
-    let circom = builder.setup();
+    // Private inputs: A factorisation of a number
+    builder.push_input("a", 641);
+    builder.push_input("b", 6_700_417);
 
-    // WARNING: The code below is just for debugging, and should instead use a verification key generated from a trusted setup.
-    // See for example https://docs.circom.io/getting-started/proving-circuits/#powers-of-tau.
-    let mut rng = rand::thread_rng();
-    let params =
-        Groth16::<Bn254>::generate_random_parameters_with_reduction(circom, &mut rng).unwrap();
+    let circuit = builder.setup();
 
-    let circom = builder.build().unwrap();
+    // Generate a random proving key. WARNING: This is not secure. A proving key generated from a ceremony should be used in production.
+    let mut rng: StdRng = SeedableRng::from_seed([0; 32]);
+    let pk =
+        Groth16::<Bn254>::generate_random_parameters_with_reduction(circuit, &mut rng).unwrap();
 
-    // There's only one public input, namely the hash digest.
-    let inputs = circom.get_public_inputs().unwrap();
+    let circuit = builder.build().unwrap();
+    let public_inputs = circuit.get_public_inputs().unwrap();
 
-    // Generate the proof
-    let proof = Groth16::<Bn254>::prove(&params, circom, &mut rng).unwrap();
+    // Create proof
+    let proof = Groth16::<Bn254>::prove(&pk, circuit, &mut rng).unwrap();
 
-    // Check that the proof is valid
-    let pvk = Groth16::<Bn254>::process_vk(&params.vk).unwrap();
-    let verified = Groth16::<Bn254>::verify_with_processed_vk(&pvk, &inputs, &proof).unwrap();
+    // Verify proof
+    let pvk = prepare_verifying_key(&pk.vk);
+    let verified = Groth16::<Bn254>::verify_with_processed_vk(&pvk, &public_inputs, &proof).unwrap();
     assert!(verified);
+
+    // Print verifying key
+    let mut pk_bytes = Vec::new();
+    pk.vk.serialize_compressed(&mut pk_bytes).unwrap();
+    println!("Verifying key: {}", hex::encode(pk_bytes));
+
+    // Print proof
+    let mut proof_serialized = Vec::new();
+    proof.serialize_compressed(&mut proof_serialized).unwrap();
+    println!("Proof: {}", hex::encode(proof_serialized));
+
+    // Print public inputs. Note that they are concatenated.
+    let mut public_inputs_serialized = Vec::new();
+    public_inputs.iter().for_each(|input| {
+        input.serialize_compressed(&mut public_inputs_serialized).unwrap();
+    });
+    println!("Public inputs: {}", hex::encode(public_inputs_serialized));
 }
 ```
+Recall that this creates a proof that the prover knows a factorisation, in this case of the [5th Fermat number](https://en.wikipedia.org/wiki/Fermat_number#Factorization) (<i>2<sup>32</sup> + 1 = 4294967297 = 641 * 6700417</i>).
 
-验证证明的 Sui API 需要一个特殊处理过的验证密钥，其中仅使用值的子集。理想情况下，此准备好的验证密钥的计算每个电路只需进行一次。你可以使用 Sui Move API 的 `sui::groth16::prepare_verifying_key` 方法，使用先前用过的 `params.vk` 值的序列化进行此处理。
-
-`prepare_verifying_key` 函数的输出是一个包含四个字节数组的向量，对应于 `vk_gamma_abc_g1_bytes`、`alpha_g1_beta_g2_bytes`、`gamma_g2_neg_pc_bytes`、`delta_g2_neg_pc_bytes`。
-
-要验证证明，你还需要两个输入，即 `proof_inputs_bytes` 和 `proof_points_bytes`，其中包含公共输入和证明。这些是从先前示例的 `inputs` 和 `proof` 值计算的序列化，你可以在 Rust 中进行如下计算：
-
-```rust
-let mut proof_inputs_bytes = Vec::new();
-inputs.serialize_compressed(&mut proof_inputs_bytes).unwrap();
-
-let mut proof_points_bytes = Vec::new();
-proof.a.serialize_compressed(&mut proof_points_bytes).unwrap();
-proof.b.serialize_compressed(&mut proof_points_bytes).unwrap();
-proof.c.serialize_compressed(&mut proof_points_bytes).unwrap();
+The output of the above function will be
 ```
+Verifying key: 94d781ec65145ed90beca1859d5f38ec4d1e30d4123424bb7b0c6fc618257b1551af0374b50e5da874ed3abbc80822e4378fdef9e72c423a66095361dacad8243d1a043fc217ea306d7c3dcab877be5f03502c824833fc4301ef8b712711c49ebd491d7424efffd121baf85244404bded1fe26bdf6ef5962a3361cef3ed1661d897d6654c60dca3d648ce82fa91dc737f35aa798fb52118bb20fd9ee1f84a7aabef505258940dc3bc9de41472e20634f311e5b6f7a17d82f2f2fcec06553f71e5cd295f9155e0f93cb7ed6f212d0ccddb01ebe7dd924c97a3f1fc9d03a9eb915020000000000000072548cb052d61ed254de62618c797853ad3b8a96c60141c2bfc12236638f1b0faf9ecf024817d8964c4b2fed6537bcd70600a85cdec0ca4b0435788dbffd81ab
+Proof: 212d4457550f258654a24a6871522797ab262dee4d7d1f89af7da90dc0904eac57ce183e6f7caca9a98755904c1398ff6288cec9877f98f2d3c776c448b9ad166839e09d77967b66129c4942eee6d3eaf4a0ce2a841acc873a46ae35e40f0088288d038857c70a1415300544d7cf376949a372049679afa35ee5206b58266184
+Public inputs: 0100000001000000000000000000000000000000000000000000000000000000
+```
+All these outputs are needed to verify the proof.
 
-以下示例智能合约准备了一个验证密钥并验证相应的证明。此示例使用 BN254 椭圆曲线构造，该构造作为 `prepare_verifying_key` 和 `verify_groth16_proof` 函数的第一个参数给出。对于 BLS12-381 构造，你可以改用 `bls12381` 函数。
+### Verification in Sui
+
+The API in Sui for verifying a proof expects a special processed verification key, where only a subset of the values are used. Ideally, computation for this prepared verification key happens only once per circuit. You can perform this processing using the `sui::groth16::prepare_verifying_key` method of the Sui Move API with a serialization of the `params.vk` value used previously.
+
+The output of the `prepare_verifying_key` function is a vector with four byte arrays, which corresponds to the `vk_gamma_abc_g1_bytes`, `alpha_g1_beta_g2_bytes`, `gamma_g2_neg_pc_bytes`, `delta_g2_neg_pc_bytes`.
+
+To verify a proof, you also need two more inputs, `public_inputs_bytes` and `proof_points_bytes`, which are printed by the program above.
+
+The following example smart contract uses the output from the program above. It first prepares a verification key and verifies the corresponding proof. This example uses the BN254 elliptic curve construction, which is given as the first parameter to the `prepare_verifying_key` and `verify_groth16_proof` functions. You can use the `bls12381` function instead for BLS12-381 construction.
 
 ```rust
-module test::groth16_test {
-    use sui::groth16;
-    use sui::event;
+use sui::groth16;
 
-    /// Event on whether the proof is verified
-    struct VerifiedEvent has copy, drop {
-        is_verified: bool,
-    }
-
-    public fun verify_proof(vk: vector<u8>, public_inputs_bytes: vector<u8>, proof_points_bytes: vector<u8>) {
-        let pvk = groth16::prepare_verifying_key(&groth16::bn254(), &vk);
-        let public_inputs = groth16::public_proof_inputs_from_bytes(public_inputs_bytes);
-        let proof_points = groth16::proof_points_from_bytes(proof_points_bytes);
-        event::emit(VerifiedEvent {is_verified: groth16::verify_groth16_proof(&groth16::bn254(), &pvk, &public_inputs, &proof_points)});
-    }
+public fun groth16_bn254_test() {
+    let pvk = groth16::prepare_verifying_key(&groth16::bn254(), &x"94d781ec65145ed90beca1859d5f38ec4d1e30d4123424bb7b0c6fc618257b1551af0374b50e5da874ed3abbc80822e4378fdef9e72c423a66095361dacad8243d1a043fc217ea306d7c3dcab877be5f03502c824833fc4301ef8b712711c49ebd491d7424efffd121baf85244404bded1fe26bdf6ef5962a3361cef3ed1661d897d6654c60dca3d648ce82fa91dc737f35aa798fb52118bb20fd9ee1f84a7aabef505258940dc3bc9de41472e20634f311e5b6f7a17d82f2f2fcec06553f71e5cd295f9155e0f93cb7ed6f212d0ccddb01ebe7dd924c97a3f1fc9d03a9eb915020000000000000072548cb052d61ed254de62618c797853ad3b8a96c60141c2bfc12236638f1b0faf9ecf024817d8964c4b2fed6537bcd70600a85cdec0ca4b0435788dbffd81ab");
+    let proof_points = groth16::proof_points_from_bytes(x"212d4457550f258654a24a6871522797ab262dee4d7d1f89af7da90dc0904eac57ce183e6f7caca9a98755904c1398ff6288cec9877f98f2d3c776c448b9ad166839e09d77967b66129c4942eee6d3eaf4a0ce2a841acc873a46ae35e40f0088288d038857c70a1415300544d7cf376949a372049679afa35ee5206b58266184");
+    let public_inputs = groth16::public_proof_inputs_from_bytes(x"0100000001000000000000000000000000000000000000000000000000000000");
+    assert!(groth16::verify_groth16_proof(&groth16::bn254(), &pvk, &public_inputs, &proof_points));
 }
 ```

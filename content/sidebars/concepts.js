@@ -6,7 +6,7 @@ const concepts = [
 	'concepts/components',
 	{
 		type: 'category',
-		label: 'App 开发者',
+		label: 'App Developers',
 		link: {
 			type: 'doc',
 			id: 'concepts/app-devs',
@@ -14,7 +14,7 @@ const concepts = [
 		items: [
 			{
 				type: 'category',
-				label: '对象模型',
+				label: 'Object Model',
 				link: {
 					type: 'doc',
 					id: 'concepts/object-model',
@@ -22,7 +22,7 @@ const concepts = [
 				items: [
 					{
 						type: 'category',
-						label: '对象所有权',
+						label: 'Object Ownership',
 						link: {
 							type: 'doc',
 							id: 'concepts/object-ownership',
@@ -36,35 +36,28 @@ const concepts = [
 					},
 					{
 						type: 'category',
-						label: '动态字段',
+						label: 'Dynamic Fields',
 						link: {
 							type: 'doc',
 							id: 'concepts/dynamic-fields',
 						},
-						items: [
-							'concepts/dynamic-fields/dynamic-object-fields',
-							'concepts/dynamic-fields/tables-bags',
-						],
+						items: ['concepts/dynamic-fields/tables-bags'],
 					},
 					{
 						type: 'category',
-						label: '交易',
+						label: 'Transfers',
 						link: {
 							type: 'doc',
-							id: 'concepts/dynamic-fields/transfers',
+							id: 'concepts/transfers',
 						},
-						items: [
-							'concepts/dynamic-fields/transfers/custom-rules',
-							'concepts/dynamic-fields/transfers/transfer-to-object',
-						],
+						items: ['concepts/transfers/custom-rules', 'concepts/transfers/transfer-to-object'],
 					},
-					'concepts/events',
 					'concepts/versioning',
 				],
 			},
 			{
 				type: 'category',
-				label: 'Move 概述',
+				label: 'Move Overview',
 				link: {
 					type: 'doc',
 					id: 'concepts/sui-move-concepts',
@@ -77,7 +70,7 @@ const concepts = [
 					'concepts/sui-move-concepts/one-time-witness',
 					{
 						type: 'category',
-						label: '包',
+						label: 'Packages',
 						link: {
 							type: 'doc',
 							id: 'concepts/sui-move-concepts/packages',
@@ -85,29 +78,15 @@ const concepts = [
 						items: [
 							'concepts/sui-move-concepts/packages/upgrade',
 							'concepts/sui-move-concepts/packages/custom-policies',
+							'concepts/sui-move-concepts/packages/automated-address-management',
 						],
 					},
-					{
-						type: 'category',
-						label: '模式',
-						link: {
-							type: 'doc',
-							id: 'concepts/sui-move-concepts/patterns',
-						},
-						items: [
-							'concepts/sui-move-concepts/patterns/capabilities',
-							'concepts/sui-move-concepts/patterns/witness',
-							'concepts/sui-move-concepts/patterns/transferrable-witness',
-							'concepts/sui-move-concepts/patterns/hot-potato',
-							'concepts/sui-move-concepts/patterns/id-pointer',
-							'concepts/sui-move-concepts/patterns/app-extensions',
-						],
-					},
+					'concepts/sui-move-concepts/conventions',
 				],
 			},
 			{
 				type: 'category',
-				label: '交易',
+				label: 'Transactions',
 				link: {
 					type: 'doc',
 					id: 'concepts/transactions',
@@ -118,11 +97,12 @@ const concepts = [
 					'concepts/transactions/gas-smashing',
 				],
 			},
+			'concepts/graphql-rpc',
 		],
 	},
 	{
 		type: 'category',
-		label: '密码学',
+		label: 'Cryptography',
 		link: {
 			type: 'doc',
 			id: 'concepts/cryptography',
@@ -130,7 +110,7 @@ const concepts = [
 		items: [
 			{
 				type: 'category',
-				label: '交易认证',
+				label: 'Transaction Authentication',
 				link: {
 					type: 'doc',
 					id: 'concepts/cryptography/transaction-auth',
@@ -143,18 +123,11 @@ const concepts = [
 					'concepts/cryptography/transaction-auth/intent-signing',
 				],
 			},
-			{
+			'concepts/cryptography/zklogin',
+			'concepts/cryptography/system/checkpoint-verification',
+			/*{
 				type: 'category',
-				label: 'zkLogin',
-				link: {
-					type: 'doc',
-					id: 'concepts/cryptography/zklogin',
-				},
-				items: ['concepts/cryptography/zklogin/zklogin-example'],
-			},
-			{
-				type: 'category',
-				label: '系统',
+				label: 'System',
 				link: {
 					type: 'doc',
 					id: 'concepts/cryptography/system',
@@ -164,19 +137,21 @@ const concepts = [
 					'concepts/cryptography/system/intents-for-validation',
 					'concepts/cryptography/system/checkpoint-verification',
 				],
-			},
+			},*/
 		],
 	},
 	{
 		type: 'category',
-		label: 'Sui 体系结构',
+		label: 'Sui Architecture',
 		link: {
 			type: 'doc',
 			id: 'concepts/sui-architecture',
 		},
 		items: [
 			'concepts/sui-architecture/high-level',
-			'concepts/transactions/transaction-lifecycle',
+			'concepts/sui-architecture/sui-storage',
+			'concepts/sui-architecture/sui-security',
+			'concepts/sui-architecture/transaction-lifecycle',
 			'concepts/sui-architecture/consensus',
 			'concepts/sui-architecture/indexer-functions',
 			'concepts/sui-architecture/epochs',
@@ -187,7 +162,7 @@ const concepts = [
 	},
 	{
 		type: 'category',
-		label: '代币经济学',
+		label: 'Tokenomics',
 		link: {
 			type: 'doc',
 			id: 'concepts/tokenomics',
@@ -196,12 +171,14 @@ const concepts = [
 			'concepts/tokenomics/proof-of-stake',
 			'concepts/tokenomics/validators-staking',
 			'concepts/tokenomics/staking-unstaking',
-			'concepts/tokenomics/sui-token',
+			'concepts/tokenomics/sui-coin',
 			'concepts/tokenomics/sui-bridging',
 			'concepts/tokenomics/storage-fund',
 			'concepts/tokenomics/gas-pricing',
 			'concepts/tokenomics/gas-in-sui',
 		],
 	},
+	'concepts/sui-bridge',
+	'concepts/research-papers',
 ];
 module.exports = concepts;

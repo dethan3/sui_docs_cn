@@ -1,22 +1,56 @@
 ---
-title: 入门指南
+title: Getting Started
 ---
 
-Sui是第一个具有互联网规模的可编程区块链平台。这可能听起来像市场用语，但当你阅读文档以了解技术时，你将发现Sui解决了许多阻碍区块链大规模采用的问题。
+Sui is the first internet-scale programmable blockchain platform. That might read like marketing speak, but as you peruse the documentation to understand the technology, you will discover that Sui addresses many of the problems that hold blockchains back from mass adoption. 
 
-在开始在Sui上开发之前，你需要了解代码仓库并安装其二进制文件。因此，你需要的前两个主题是：
+Before you can get started developing on Sui, you need to understand the code repository and install its binaries. 
 
-- [Sui环境设置](./getting-started/sui-environment.mdx)
-- [安装Sui](./getting-started/sui-install.mdx)
+## Install Sui 
 
-## 安装Sui之后
+{@include: ../../snippets/quick-install.mdx}
 
-在你的系统上安装了Sui之后，你可以开始开发。你可以学习有关系统基本方面的信息，了解Sui 101中的内容，或者直接按照“你的第一个dApp”中的说明编写和发布软件包。还有越来越多的代码示例，你可以从中获取灵感，这些示例是由Sui和Move专家编写的。
+You can also install Sui from binaries or from source, as detailed in the Install Sui page.
 
-- [Sui 101](./sui-101.mdx)
-- [你的第一个dApp](./first-app.mdx)
-- [示例](./app-examples.mdx)
+Go to [Install Sui](./getting-started/sui-install.mdx).
 
-## Move
+## After installing Sui
 
-Move是在Sui上驱动智能合约的编程语言。Move非常灵活，许多区块链使用该语言。Sui使该语言适应了Sui区块链独特的需求，因此尽管你可能熟悉其他区块链上的Move，但在Sui上使用时有一些独特的功能。有关该语言在Sui上的操作方式与其原始用例的详细信息，请参阅概念部分中的[Move](/concepts/sui-move-concepts.mdx)。
+After you have Sui installed on your system, you can begin to connect with a network and publish smart contracts. 
+
+- [Connect to a Sui Network](./getting-started/connect.mdx)
+- [Connect to a Local Network](./getting-started/local-network.mdx)
+- [Get Sui Address](./getting-started/get-address.mdx)
+- [Get SUI Coins](./getting-started/get-coins.mdx)
+
+## GraphQL queries
+
+Use the GraphQL service for Sui RPC to interact with on-chain data. 
+
+Go to [Query Sui RPC with GraphQL](./getting-started/graphql-rpc.mdx).
+
+## Move IDEs and plugins
+
+The following table lists proven choices for IDEs with Move extensions. These IDEs and plugins are not required, but they provide a better experience for developing on Sui.
+
+| IDE | Move plugin | Description |
+| --- | ------ | ----------- |
+| [Visual Studio Code](https://code.visualstudio.com/) | &bull; [Move extension](https://marketplace.visualstudio.com/items?itemName=mysten.move)<br/>&bull; [Move syntax](https://marketplace.visualstudio.com/items?itemName=damirka.move-syntax) | The recommended free IDE for Move development from Microsoft. |
+| [IntelliJ IDEA](https://www.jetbrains.com/idea/) | [Move Language Plugin](https://plugins.jetbrains.com/plugin/14721-move-language) | A commercial IDE from JetBrains. |
+| [Emacs](https://www.gnu.org/software/emacs/) | [move-mode](https://github.com/amnn/move-mode) | A free and open source text editor. |
+| [Github Codespaces](https://github.com/features/codespaces) | [Move Syntax](https://marketplace.visualstudio.com/items?itemName=damirka.move-syntax) | A web-based IDE from GitHub. |
+
+:::info 
+
+Some plugins might not yet provide highlighting support for [Move 2024](./advanced/move-2024-migration.mdx).
+
+:::
+
+## Related links
+
+After installing Sui and setting up your development environment, use the information in the following sections to continue your development journey.
+
+- [App Examples](./app-examples.mdx): A mix of end-to-end examples that you can draw inspiration from in your own projects.
+- [Sui 101](./sui-101.mdx): Topics that you should know when just starting out to develop on Sui.
+- [Advanced Topics](./advanced.mdx): Topics that you might not find beneficial until you start solving more complex problems.
+- [Cryptography](./cryptography.mdx): Leverage cryptography functions to provide security for your smart contract actions. 

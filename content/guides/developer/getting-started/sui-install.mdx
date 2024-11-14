@@ -1,168 +1,252 @@
 ---
-title: 安装 Sui
-description: 在你的系统上安装 Sui 框架及其所需的先决条件，包括 Sui 命令行界面，以便与 Sui 网络进行交互。
+title: Install Sui
+description: Install the Sui framework and required prerequisites on your system, including the Sui command line interface to interact with the Sui network.
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+The quickest way to install Sui is using the binaries delivered with every release. If you require more control over the install process, you can install from source. To take advantage of containerization, you can utilize the Docker images in the `docker` folder of the sui repository.
 
-安装 Sui 的最快方式是使用每个版本附带的二进制文件。如果你需要更多对安装过程的控制，可以从源代码进行安装。为了充分利用容器化，你可以使用 sui 存储库的 `docker` 文件夹中的 Docker 镜像。
+## Supported operating systems {#supported-operating-systems}
 
-## 支持的操作系统 {#supported-operating-systems}
+Sui supports the following operating systems:
 
-Sui 支持以下操作系统：
+- Linux - Ubuntu version 20.04 (Bionic Beaver) or later
+- macOS - macOS Monterey or later
+- Microsoft Windows - Windows 10 and 11
 
-- Linux - Ubuntu 版本 20.04(Bionic Beaver)
-- macOS - macOS Monterey
-- Microsoft Windows - Windows 10 和 11
+::::info[Fastest method]
 
-## 使用 Homebrew 安装 {#install-homebrew}
+## Quick install using Homebrew or Chocolatey {#install-homebrew}
 
-如果你使用 [Homebrew](https://brew.sh/)，你可以使用以下命令安装 Sui：
+{@include: ../../../snippets/quick-install.mdx}
 
-```bash
-brew tap mystenlabs/tap
-brew install mystenlabs/tap/sui
+:::note
+
+If you use this method to install Sui, you are all set. The quick install is suitable for most use cases. The remaining installation methods are for those wanting more control over the installation process.
+
+:::
+::::
+
+## Download binaries from GitHub {#install-binaries}
+
+Each Sui release provides a set of binaries for several operating systems. You can download these binaries from GitHub and use them to install Sui.
+
+<Tabs groupId="operating-systems">
+
+<TabItem value="linux" label="Linux">
+1. Go to https://github.com/MystenLabs/sui.
+1. In the right pane, find the **Releases** section.
+
+    ![Sui releases in GitHub](./images/releases.png)
+1. Click the release tagged **Latest** to open the release's page.
+1. In the **Assets** section of the release, select the .tgz compressed file that corresponds to your operating system.
+1. Extract all files from the .tgz file into the preferred location on your system. These instructions assume you extract the files into a `sui` folder at the user root of your system for demonstration purposes. Replace references to this location in subsequent steps if you choose a different directory.
+1. Navigate to the expanded folder. You should have the following extracted files:
+
+    {@include: ../../../snippets/binaries-file-list.mdx}
+
+1. Add the folder containing the extracted files to your `PATH` variable. To do so, you can update your `~/.bashrc` to include the location of the Sui binaries. If using the suggested location, you type `export PATH=$PATH:~/sui` and press Enter.
+1. Start a new terminal session or type `source ~/.bashrc` to load the new `PATH` value.
+
+</TabItem>
+
+<TabItem value="mac" label="macOS">
+
+1. Go to https://github.com/MystenLabs/sui.
+1. In the right pane, find the **Releases** section.
+
+    ![Sui releases in GitHub](./images/releases.png)
+1. Click the release tagged **Latest** to open the release's page.
+1. In the **Assets** section of the release, select the .tgz compressed file that corresponds to your operating system.
+1. Extract all files from the .tgz file into the preferred location on your system. These instructions assume you extract the files into a `sui` folder at the user root of your system. Replace references to this location in subsequent steps if you choose a different directory.
+1. Navigate to the expanded folder. You should have the following extracted files: 
+    
+    {@include: ../../../snippets/binaries-file-list.mdx}
+
+1. Add the folder containing the extracted files to your `PATH` variable. To do so, you can update your `~/.zshrc` or `~/.bashrc` to include the location of the Sui binaries. If using the suggested location, you type `export PATH=$PATH:~/sui` and press Enter.
+1. Start a new terminal session or type `source ~/.zshrc` (or `.bashrc`) to load the new `PATH` value.
+1. If running the binaries for the first time, you might receive an error from MacOS that prevents the binaries from running. If you receive this error, close the dialog and type `xattr -d com.apple.quarantine ~/sui/*` in your terminal and press Enter (be sure to adjust the path if different). 
+
+</TabItem>
+
+<TabItem value="win" label="Windows">
+
+1. Go to https://github.com/MystenLabs/sui.
+1. In the right pane, find the **Releases** section.
+
+    ![Sui releases in GitHub](./images/releases.png)
+1. Click the release tagged **Latest** to open the release's page.
+1. In the **Assets** section of the release, select the .tgz compressed file that corresponds to your operating system.
+1. Extract all files from the .tgz file into the preferred location on your system. These instructions assume you extract the files into a `sui` folder at the root of your C drive. Replace references to this location in subsequent steps if you choose a different directory.
+
+    :::info 
+
+    Windows does not natively support .tgz files, but you can use a free compressed file app like [7Zip](https://7-zip.org/) to extract.
+
+    :::
+
+1. Navigate to the expanded folder. You should have the following extracted files:
+
+    {@include: ../../../snippets/binaries-file-list.mdx}
+
+1. Add the folder containing the extracted files to your `PATH` variable. There are several ways to get to the setting depending on your version of Windows. One way that works on all versions of Windows is to type `sysdm.cpl` in a console to open the System Properties window. Under the **Advanced** tab, click the **Environment Variables...** button.
+1. In the Environment Variables window, select the `Path` variable and click the **Edit...** button. 
+1. In the Edit environment variable window, click **New** and add the path to your expanded folder. Using the example path, this would be `C:\sui`.
+1. Click **OK**.
+
+</TabItem>
+
+</Tabs>
+
+:::info 
+
+Running binaries other than `sui` might require installing prerequisites itemized in the following section. 
+
+:::
+
+#### Confirm the installation {#confirm-the-installation}
+
+To confirm that Sui installed correctly, type `sui --version` in your console or terminal and press Enter. The response should provide the Sui version installed. If the console or terminal responds with a command not found error, make sure the full path to your Sui binaries is included in your `PATH` variable.
+
+## Install from Cargo {#install-sui-binaries-from-source}
+
+Run the following command to install Sui binaries from the `testnet` branch:
+
+```shell
+cargo install --locked --git https://github.com/MystenLabs/sui.git --branch testnet sui --features tracing
 ```
 
-## 从二进制文件安装 {#install-binaries}
+Enabling the `tracing` feature is important as it adds Move test coverage and debugger support in the Sui CLI. Without it these two features will not be able to be used.
 
-每个 Sui 版本都提供了一组适用于多个操作系统的二进制文件。你可以从 GitHub 下载这些二进制文件并使用它们安装 Sui。
+The install process can take a while to complete. You can monitor installation progress in the terminal. If you encounter an error, make sure to install the latest version of all prerequisites and then try the command again.
 
-1. 转到 https://github.com/MystenLabs/sui。
-1. 在右侧窗格中，找到 **Releases** 部分。
+To update to the latest stable version of Rust:
 
-    ![GitHub 中的 Sui 发行版](./images/releases.png)
-1. 单击标记为 **Latest** 的发行版，打开发行版的页面。
-1. 在发行版的 **Assets** 部分，选择与你的操作系统相对应的 .tgz 压缩文件。
-1. 双击下载的文件。如果文件没有自动展开，请手动解压文件。
-1. 打开展开的文件夹，双击适当的二进制文件进行安装，以 sui-`<OS>`-`<ARCHITECTURE>` 开头：
+```shell
+rustup update stable
+```
 
-    - sui-faucet-`<OS>`-`<ARCHITECTURE>`: 本地龙头，用于在本地网络上铸币。
-    - sui-indexer-`<OS>`-`<ARCHITECTURE>`: 用于本地 Sui 网络的索引器。
-    - sui-`<OS>`-`<ARCHITECTURE>`: 主 Sui 二进制文件。
-    - sui-node-`<OS>`-`<ARCHITECTURE>`: 运行本地节点。
-    - sui-test-validator-`<OS>`-`<ARCHITECTURE>`: 在本地网络上运行开发的测试验证器。
-    - sui-tool-`<OS>`-`<ARCHITECTURE>`: 为 Sui 提供实用工具。
+The command installs Sui components in the `~/.cargo/bin` folder.
 
-    Sui 二进制文件需要一些时间来下载和安装文件，因此请确保你为其完成分配足够的时间。实际完成时间取决于你的网络连接和计算机规格。
+## Upgrade from Cargo
 
-### 确认安装 {#confirm-the-installation}
+If you previously installed the Sui binaries, you can update them to the most recent release with the same command you used to install them (changing `testnet` to the desired branch):
 
-要确认 Sui 安装正确，请键入 `sui` 并按 Enter 键。你应该看到有关已安装的 Sui 版本的消息以及有关使用 Sui 命令的帮助信息。
+```shell
+cargo install --locked --git https://github.com/MystenLabs/sui.git --branch testnet sui --features tracing
+```
 
-## 从源代码安装
+The `tracing` feature is important as it adds Move test coverage and debugger support in the Sui CLI. Unless it is enabled you will not be able to use these two features.
 
-按照本主题中的说明安装与 Sui 网络交互所需的 Rust crates（包），包括 Sui CLI。
+## Build from source
 
-要从源代码安装 Sui，首先需要为你的操作系统安装其[先决条件](#prerequisites)。在安装支持技术之后，你可以从[源代码安装 Sui 二进制文件](#install-sui-binaries-from-source)。
+Follow the instructions in this topic to install the Rust crates (packages) required to interact with Sui networks, including the Sui CLI.
 
-你还可以下载[源代码](./sui-environment)以本地访问文件。
+To install Sui from source, you first need to install its [prerequisites](#prerequisites) for your operating system. After installing the supporting technologies, you can install [Sui binaries from source](#install-sui-binaries-from-source).
 
-## 先决条件 {#prerequisites}
+You can also download the [source code](/references/contribute/sui-environment.mdx) to have local access to files.
 
-你的系统需要以下先决条件才能成功安装 Sui。
+#### Prerequisites {#prerequisites}
 
-### Rust 和 Cargo {#rust-and-cargo}
+Your system needs the following prerequisites available to successfully install Sui.
 
-Sui 在所有支持的操作系统上都需要 Rust 和 Cargo（Rust 的包管理器）。安装 Rust 的建议方法是使用 `rustup` 并使用 cURL。
+#### Rust and Cargo {#rust-and-cargo}
 
-安装说明中的一些其他命令还需要运行 cURL。如果无法运行 cURL 命令来安装 Rust，请在安装 Rust 之前查看以下部分中有关为你的操作系统安装 cURL 的说明。
+Sui requires Rust and Cargo (Rust's package manager) on all supported operating systems. The suggested method to install Rust is with `rustup` using cURL.
 
-在 macOS 或 Linux 上使用以下命令安装 Rust 和 Cargo：
+Some other commands in the installation instructions also require cURL to run. If you can't run the cURL command to install Rust, see the instructions to install cURL for your operating system in the following section before you install Rust.
+
+Use the following command to install Rust and Cargo on macOS or Linux:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-如果你使用的是 Windows 11，请查看[Rust安装程序](https://www.rust-lang.org/tools/install)上 Rust 网站的相关信息。安装程序会检查是否存在 C++ 构建工具，并在必要时提示你安装它们。选择最符合你环境的选项，并按照安装向导中的说明操作。
+If you use Windows 11, see information about using the [Rust installer](https://www.rust-lang.org/tools/install) on the Rust website. The installer checks for C++ build tools and prompts you to install them if necessary. Select the option that best defines your environment and follow the instructions in the install wizard.
 
-有关其他安装选项，请参阅[安装 Rust](https://www.rust-lang.org/tools/install)。
+For additional installation options, see [Install Rust](https://www.rust-lang.org/tools/install).
 
-Sui 使用最新版本的 Cargo 来构建和管理依赖关系。有关更多信息，请参阅 Rust 网站上的[Cargo安装](https://doc.rust-lang.org/cargo/getting-started/installation.html)页面。
+Sui uses the latest version of Cargo to build and manage dependencies. See the [Cargo installation](https://doc.rust-lang.org/cargo/getting-started/installation.html) page on the Rust website for more information.
 
-使用以下命令使用 `rustup` 更新 Rust：
+Use the following command to update Rust with `rustup`:
 
 ```bash
 rustup update stable
 ```
+#### Additional prerequisites by operating system
 
-### 操作系统的额外先决条件
-
-选择适当的选项卡以查看你系统的要求。
+Select the appropriate tab to view the requirements for your system.
 
 <Tabs groupId="operating-systems">
 
 <TabItem value="linux" label="Linux">
 
-Linux 操作系统所需的先决条件包括：
+The prerequisites needed for the Linux operating system include:
 
 - cURL
-- Rust 和 Cargo
+- Rust and Cargo
 - Git CLI
 - CMake
 - GCC
 - libssl-dev
 - libclang-dev
-- libpq-dev
+- libpq-dev (optional)
 - build-essential
 
 :::info
 
-Linux 指南假定使用 APT 软件包管理器的发行版。你可能需要调整说明以使用其他软件包管理器。
+The Linux instructions assume a distribution that uses the APT package manager. You might need to adjust the instructions to use other package managers.
 
 :::
 
-安装此部分列出的先决条件。使用以下命令更新 `apt-get`：
+Install the prerequisites listed in this section. Use the following command to update `apt-get`:
 
 ```bash
 sudo apt-get update
 ```
 
-#### 所有 Linux 先决条件
+#### All Linux prerequisites
+ 
+Reference the relevant sections that follow to install each prerequisite individually, or run the following to install them all at once:
 
-参考以下相关部分，逐个安装每个先决条件，或者运行以下命令一次性安装它们全部：
-
-```bash
-sudo apt-get install curl git-all cmake gcc libssl-dev pkg-config libclang-dev libpq-dev build-essential
-```
+{@include: ../../../snippets/linux-deps.mdx}
 
 #### cURL {#curl}
 
-使用以下命令安装 cURL：
+Install cURL with the following command:
 
 ```bash
 sudo apt-get install curl
 ```
 
-使用以下命令验证 cURL 是否正确安装：
+Verify that cURL installed correctly with the following command:
 
 ```bash
 curl --version
 ```
 
-Git CLI {#git-cli}
-运行以下命令安装 Git，包括 [Git CLI](https://cli.github.com/)：
+#### Git CLI {#git-cli}
+
+Run the following command to install Git, including the [Git CLI](https://cli.github.com/):
 
 ```bash
 sudo apt-get install git-all
 ```
 
-有关更多信息，请参阅 GitHub 网站上的在 [Linux 上安装 Git](https://github.com/git-guides/install-git#install-git-on-linux)。
+For more information, see [Install Git on Linux](https://github.com/git-guides/install-git#install-git-on-linux) on the GitHub website.
 
 #### CMake {#cmake}
 
-使用以下命令安装 CMake。
+Use the following command to install CMake.
 
 ```bash
 sudo apt-get install cmake
 ```
 
-要自定义安装，请参阅 CMake 网站上的[安装 CMake](https://cmake.org/install/)。
+To customize the installation, see [Installing CMake](https://cmake.org/install/) on the CMake website.
 
 #### GCC {#gcc}
 
-使用以下命令安装 GNU Compiler Collection，`gcc`：
+Use the following command to install the GNU Compiler Collection, `gcc`:
 
 ```bash
 sudo apt-get install gcc
@@ -170,15 +254,15 @@ sudo apt-get install gcc
 
 #### libssl-dev {#libssl-dev}
 
-使用以下命令安装 `libclang-dev`：
+Use the following command to install `libssl-dev`:
 
 ```bash
 sudo apt-get install libssl-dev
 ```
 
-如果你使用的 Linux 版本不支持 `libssl-dev`, 请在 [ROS Index](https://index.ros.org/d/libssl-dev/) 上找到一个等效的包。
+If the version of Linux you use doesn't support `libssl-dev`, find an equivalent package for it on the [ROS Index](https://index.ros.org/d/libssl-dev/).
 
-（可选）如果你安装了 OpenSSL，还可能需要安装 `pkg-config`：
+(Optional) If you have OpenSSL you might also need to also install `pkg-config`:
 
 ```bash
 sudo apt-get install pkg-config
@@ -186,27 +270,29 @@ sudo apt-get install pkg-config
 
 #### libclang-dev {#libclang-dev}
 
-使用以下命令安装 `libclang-dev`：
+Use the following command to install `libclang-dev`:
 
 ```bash
 sudo apt-get install libclang-dev
 ```
 
-如果你使用的 Linux 版本不支持 `libclang-dev`, 请在 [ROS Index](https://index.ros.org/d/libclang-dev/) 上找到一个等效的包。
+If the version of Linux you use doesn't support `libclang-dev`, find an equivalent package for it on the [ROS Index](https://index.ros.org/d/libclang-dev/).
 
-#### libpq-dev {#libpq-dev}
+#### libpq-dev (optional) {#libpq-dev}
 
-使用以下命令安装 `libpq-dev`:
+{@include: ../../../snippets/libpq-req.mdx}
+
+Use the following command to install `libpq-dev`:
 
 ```bash
 sudo apt-get install libpq-dev
 ```
 
-如果你使用的 Linux 版本不支持 `libpq-dev`, 请在 [ROS Index](https://index.ros.org/d/libclang-dev/) 上找到一个等效的包。
+If the version of Linux you use doesn't support `libpq-dev`, find an equivalent package for it on the [ROS Index](https://index.ros.org/d/libpq-dev/).
 
 #### build-essential {#build-essential}
 
-使用以下命令安装 `build-essential`:
+Use the following command to install `build-essential`:
 
 ```bash
 sudo apt-get install build-essential
@@ -216,19 +302,20 @@ sudo apt-get install build-essential
 
 <TabItem value="mac" label="macOS">
 
-macOS 操作系统所需的先决条件包括：
+The prerequisites needed for the macOS operating system include:
 
-- Rust 和 Cargo
+- Rust and Cargo
 - Homebrew
 - cURL
 - CMake
+- libpq (optional)
 - Git CLI
 
-macOS 包含一个你可以用于安装 Homebrew 的 cURL 版本。使用 Homebrew 安装其他工具，包括 cURL 的新版本。
+macOS includes a version of cURL you can use to install Homebrew. Use Homebrew to install other tools, including a newer version of cURL.
 
 #### Homebrew {#brew}
 
-使用以下命令安装 [Homebrew](https://brew.sh/):
+Use the following command to install [Homebrew](https://brew.sh/):
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -236,21 +323,20 @@ macOS 包含一个你可以用于安装 Homebrew 的 cURL 版本。使用 Homebr
 
 :::info
 
-如果你使用了 [Install using Homebrew](#install-homebrew) 部分中的命令，则无需安装其他任何内容。
+If you used the commands in the [Install using Homebrew](#install-homebrew) section, you do not need to install anything else.
 
 :::
 
-#### 所有 macOS 先决条件
+#### All macOS prerequisites
 
-使用安装了 Homebrew 的情况下，你可以从以下部分安装单个先决条件，或使用以下命令一次性安装它们：
+With Homebrew installed, you can install individual prerequisites from the following sections or install them all at once with this command:
 
-```bash
-brew install curl cmake git
-```
+{@include: ../../../snippets/macos-deps.mdx}
+
 
 #### cURL {#curl-1}
 
-使用以下命令更新 macOS 上的默认 [cURL](https://curl.se)：
+Use the following command to update the default [cURL](https://curl.se) on macOS:
 
 ```bash
 brew install curl
@@ -258,98 +344,85 @@ brew install curl
 
 #### CMake {#cmake-1}
 
-使用以下命令安装 CMake:
+Use the following command to install CMake:
 
 ```bash
 brew install cmake
 ```
 
-要自定义安装，请参阅 CMake 网站上的 [安装 CMake](https://cmake.org/install/)。
+To customize the installation, see [Installing CMake](https://cmake.org/install/) on the CMake website.
+
+#### libpq (optional) {#libpq-1}
+
+{@include: ../../../snippets/libpq-req.mdx}
+
+Use the following command to install libpq:
+```bash
+brew install libpq
+```
 
 #### Git CLI {#git-cli-1}
 
-使用以下命令安装 Git:
+Use the following command to install Git:
 
 ```bash
 brew install git
 ```
 
-安装 Git 后，下载并安装 [Git command line interface](https://git-scm.com/download/).
+After installing Git, download and install the [Git command line interface](https://git-scm.com/download/).
 
 </TabItem>
 
 <TabItem value="win" label="Windows">
 
-Windows 11 操作系统所需的先决条件包括：
+The prerequisites needed for the Windows 11 operating system include:
 
 - cURL
-- Rust 和 Cargo
+- Rust and Cargo
 - Git CLI
 - CMake
-- C++ 构建工具
-- LLVM 编译器
+- C++ build tools
+- LLVM compiler
 
 #### cURL {#curl-2}
 
-Windows 11 默认安装了微软版本的 [cURL](https://curl.se/windows/microsoft.html)。如果你想使用 curl 项目版本，可以从 [https://curl.se/windows/](https://curl.se/windows/) 下载并安装。
+Windows 11 ships with a Microsoft version of [cURL](https://curl.se/windows/microsoft.html) already installed. If you want to use the curl project version instead, download and install it from [https://curl.se/windows/](https://curl.se/windows/).
 
 #### Git CLI {#git-cli-2}
 
-下载并安装 [Git 命令行界面](https://git-scm.com/download/)。
+Download and install the [Git command line interface](https://git-scm.com/download/).
 
 #### CMake {#cmake-2}
 
-从 CMake 网站下载并安装 [CMake](https://cmake.org/download/)。
+Download and install [CMake](https://cmake.org/download/) from the CMake website.
 
 #### Protocol Buffers {#protocol-buffers}
 
-下载 [Protocol Buffers](https://github.com/protocolbuffers/protobuf/releases) (protoc-xx.x-win32.zip 或 protoc-xx.x-win64.zip) 并将 \bin 目录添加到你的 Windows PATH 环境变量中。
+Download [Protocol Buffers](https://github.com/protocolbuffers/protobuf/releases) (protoc-xx.x-win32.zip or protoc-xx.x-win64.zip) and add the \bin directory to your Windows PATH environment variable.
 
-#### Windows 上的其他工具 {#additional-tools-windows}
+#### Additional tools for Windows {#additional-tools-windows}
 
-在运行 Windows 的计算机上，Sui 需要以下其他工具。
+Sui requires the following additional tools on computers running Windows.
 
-- 仅适用于 Windows on ARM64 - [Visual Studio 2022 预览版](https://visualstudio.microsoft.com/vs/preview/)。
-- 需要 [C++ 构建工具](https://visualstudio.microsoft.com/downloads/) 来 [安装 Rust](#rust-and-cargo)。
-- [LLVM 编译器基础设施](https://releases.llvm.org/)。查找类似于 LLVM-15.0.7-win64.exe（64 位 Windows）或 LLVM-15.0.7-win32.exe（32 位 Windows）的文件。
+- For Windows on ARM64 only - [Visual Studio 2022 Preview](https://visualstudio.microsoft.com/vs/preview/).
+- [C++ build tools](https://visualstudio.microsoft.com/downloads/) is required to [install Rust](#rust-and-cargo).
+- The [LLVM Compiler Infrastructure](https://releases.llvm.org/). Look for a file with a name similar to LLVM-15.0.7-win64.exe for 64-bit Windows, or LLVM-15.0.7-win32.exe for 32-bit Windows.
 
-**已知问题** - 在 PowerShell 中，`sui console` 命令无法正常工作。
+**Known issue** - The `sui console` command does not work in PowerShell.
 
 </TabItem>
 
 </Tabs>
 
-## 从源代码安装 Sui 二进制文件 {#install-sui-binaries-from-source}
+## Using Sui from command line
 
-运行以下命令从 `testnet` 分支安装 Sui 二进制文件：
+With Sui installed, you can interact with Sui networks using the Sui CLI. For more details, see the [Sui CLI](/references/cli.mdx) reference.
 
-```shell
-cargo install --locked --git https://github.com/MystenLabs/sui.git --branch testnet sui
-```
+## Next steps {#next-steps}
 
-## 从源代码安装 Sui 二进制文件 {#install-sui-binaries-from-source}
+Now that you have Sui installed, it's time to start developing. Check out the following topics to start working with Sui:
 
-运行以下命令从 `testnet` 分支安装 Sui 二进制文件：
-
-```shell
-rustup update stable
-```
-
-该命令将 Sui 组件安装在 `~/.cargo/bin` 文件夹中。
-
-## 升级 Sui 二进制文件
-
-如果你之前安装过 Sui 二进制文件，可以使用相同的命令将它们更新到最新版本：
-
-```shell
-cargo install --locked --git https://github.com/MystenLabs/sui.git --branch devnet sui
-```
-
-## 下一步 {#next-steps}
-
-现在你已经安装了 Sui，是时候开始开发了。查看以下主题以开始使用 Sui：
-
-- 阅读有关 [Sui CLI](/references/cli.mdx) 的信息，这是探索 Sui 网络的最直接方式。
-- [了解可用的网络](./connect.mdx) 并连接到其中一个。
-- 在开发网络上 [获取一些硬币](./get-coins.mdx)。
-- [构建你的第一个 dApp](../first-app.mdx) 以开始你的链上之旅。
+- Read about the [Sui CLI](/references/cli.mdx), the most straightforward way to start exploring Sui networks.
+- [Learn about the available networks](./connect.mdx) and connect to one.
+- [Get some coins](./get-coins.mdx) on a development network.
+- [Build your first dApp](../first-app.mdx) to start your on-chain journey.
