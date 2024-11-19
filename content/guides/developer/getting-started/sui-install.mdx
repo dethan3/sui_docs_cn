@@ -1,4 +1,309 @@
 ---
+title: 安装 Sui
+description: 在您的系统上安装 Sui 框架及其所需的前置条件，包括用于与 Sui 网络交互的命令行界面。
+---
+
+安装 Sui 最快捷的方式是使用随每个版本发布的二进制文件。如果您需要对安装过程有更多控制，可以从源代码安装。如果想要利用容器化技术，您可以使用 sui 代码库 `docker` 文件夹中的 Docker 镜像。
+
+## 支持的操作系统 {#supported-operating-systems}
+
+Sui 支持以下操作系统：
+
+- Linux - Ubuntu 20.04 (Bionic Beaver) 或更高版本
+- macOS - macOS Monterey 或更高版本
+- Microsoft Windows - Windows 10 和 11
+
+::::info[最快速的方法]
+
+## 使用 Homebrew 或 Chocolatey 快速安装 {#install-homebrew}
+
+{@include: ../../../snippets/quick-install.mdx}
+
+:::note
+
+如果您使用这种方法安装 Sui，那么所有配置就已经完成了。快速安装适用于大多数使用场景。其余的安装方法适用于那些想要对安装过程有更多控制的用户。
+
+:::
+::::
+
+## 从 GitHub 下载二进制文件 {#install-binaries}
+
+每个 Sui 版本都为多个操作系统提供了一组二进制文件。您可以从 GitHub 下载这些二进制文件并用它们来安装 Sui。
+
+<Tabs groupId="operating-systems">
+
+<TabItem value="linux" label="Linux">
+
+1. 访问 https://github.com/MystenLabs/sui
+1. 在右侧面板中找到 **Releases** 部分。
+
+    ![GitHub 中的 Sui 发布版本](./images/releases.png)
+1. 点击标记为 **Latest** 的发布版本以打开该版本的页面。
+1. 在发布版本的 **Assets** 部分，选择与您的操作系统对应的 .tgz 压缩文件。
+1. 将 .tgz 文件中的所有文件解压到您系统上的首选位置。这些说明假设您将文件解压到系统用户根目录下的 `sui` 文件夹中作为演示。如果选择其他目录，请在后续步骤中替换对此位置的引用。
+1. 导航到展开的文件夹。您应该看到以下解压出的文件：
+
+    {@include: ../../../snippets/binaries-file-list.mdx}
+
+1. 将包含解压文件的文件夹添加到您的 `PATH` 变量中。为此，您可以更新 `~/.bashrc` 文件以包含 Sui 二进制文件的位置。如果使用建议的位置，输入 `export PATH=$PATH:~/sui` 并按 Enter。
+1. 启动一个新的终端会话或输入 `source ~/.bashrc` 以加载新的 `PATH` 值。
+
+</TabItem>
+
+<TabItem value="mac" label="macOS">
+
+1. 访问 https://github.com/MystenLabs/sui
+1. 在右侧面板中找到 **Releases** 部分。
+
+    ![GitHub 中的 Sui 发布版本](./images/releases.png)
+1. 点击标记为 **Latest** 的发布版本以打开该版本的页面。
+1. 在发布版本的 **Assets** 部分，选择与您的操作系统对应的 .tgz 压缩文件。
+1. 将 .tgz 文件中的所有文件解压到您系统上的首选位置。这些说明假设您将文件解压到系统用户根目录下的 `sui` 文件夹中。如果选择其他目录，请在后续步骤中替换对此位置的引用。
+1. 导航到展开的文件夹。您应该看到以下解压出的文件：
+
+    {@include: ../../../snippets/binaries-file-list.mdx}
+
+1. 将包含解压文件的文件夹添加到您的 `PATH` 变量中。为此，您可以更新 `~/.zshrc` 或 `~/.bashrc` 文件以包含 Sui 二进制文件的位置。如果使用建议的位置，输入 `export PATH=$PATH:~/sui` 并按 Enter。
+1. 启动一个新的终端会话或输入 `source ~/.zshrc`（或 `.bashrc`）以加载新的 `PATH` 值。
+1. 如果是第一次运行二进制文件，您可能会收到 MacOS 的错误提示，阻止二进制文件运行。如果收到此错误，关闭对话框并在终端中输入 `xattr -d com.apple.quarantine ~/sui/*` 并按 Enter（如果路径不同，请相应调整）。
+
+</TabItem>
+
+<TabItem value="win" label="Windows">
+
+1. 访问 https://github.com/MystenLabs/sui
+1. 在右侧面板中找到 **Releases** 部分。
+
+    ![GitHub 中的 Sui 发布版本](./images/releases.png)
+1. 点击标记为 **Latest** 的发布版本以打开该版本的页面。
+1. 在发布版本的 **Assets** 部分，选择与您的操作系统对应的 .tgz 压缩文件。
+1. 将 .tgz 文件中的所有文件解压到您系统上的首选位置。这些说明假设您将文件解压到 C 盘根目录下的 `sui` 文件夹中。如果选择其他目录，请在后续步骤中替换对此位置的引用。
+
+    :::info 
+
+    Windows 原生不支持 .tgz 文件，但您可以使用免费的压缩文件应用程序（如 [7Zip](https://7-zip.org/)）来解压。
+
+    :::
+
+1. 导航到展开的文件夹。您应该看到以下解压出的文件：
+
+    {@include: ../../../snippets/binaries-file-list.mdx}
+
+1. 将包含解压文件的文件夹添加到您的 `PATH` 变量中。根据您的 Windows 版本，有几种方法可以访问这个设置。一种适用于所有 Windows 版本的方法是在控制台中输入 `sysdm.cpl` 以打开系统属性窗口。在 **高级** 标签下，点击 **环境变量...** 按钮。
+1. 在环境变量窗口中，选择 `Path` 变量并点击 **编辑...** 按钮。
+1. 在编辑环境变量窗口中，点击 **新建** 并添加展开文件夹的路径。使用示例路径的话，这将是 `C:\sui`。
+1. 点击 **确定**。
+
+</TabItem>
+
+</Tabs>
+
+:::info 
+
+运行除 `sui` 之外的二进制文件可能需要安装下一节中列出的前置条件。
+
+:::
+
+#### 确认安装 {#confirm-the-installation}
+
+要确认 Sui 是否正确安装，在控制台或终端中输入 `sui --version` 并按 Enter。应该会显示安装的 Sui 版本。如果控制台或终端返回命令未找到错误，请确保 Sui 二进制文件的完整路径已包含在您的 `PATH` 变量中。
+
+## 从 Cargo 安装 {#install-sui-binaries-from-source}
+
+运行以下命令从 `testnet` 分支安装 Sui 二进制文件：
+
+```shell
+cargo install --locked --git https://github.com/MystenLabs/sui.git --branch testnet sui --features tracing
+```
+
+启用 `tracing` 功能很重要，因为它为 Sui CLI 添加了 Move 测试覆盖率和调试器支持。没有它，这两个功能将无法使用。
+
+安装过程可能需要一段时间才能完成。您可以在终端中监控安装进度。如果遇到错误，请确保安装所有前置条件的最新版本，然后再次尝试该命令。
+
+要更新到最新的稳定版 Rust：
+
+```shell
+rustup update stable
+```
+
+该命令将 Sui 组件安装在 `~/.cargo/bin` 文件夹中。
+
+## 从 Cargo 升级
+
+如果您之前安装过 Sui 二进制文件，可以使用与安装时相同的命令将它们更新到最新版本（将 `testnet` 更改为所需的分支）：
+
+```shell
+cargo install --locked --git https://github.com/MystenLabs/sui.git --branch testnet sui --features tracing
+```
+
+`tracing` 功能很重要，因为它为 Sui CLI 添加了 Move 测试覆盖率和调试器支持。除非启用它，否则您将无法使用这两个功能。
+
+## 从源代码构建
+
+按照本主题中的说明安装与 Sui 网络交互所需的 Rust crates（包），包括 Sui CLI。
+
+要从源代码安装 Sui，您首先需要为您的操作系统安装其[前置条件](#prerequisites)。安装支持技术后，您可以[从源代码安装 Sui 二进制文件](#install-sui-binaries-from-source)。
+
+您也可以下载[源代码](/references/contribute/sui-environment.mdx)以获取本地文件访问权限。
+
+#### 前置条件 {#prerequisites}
+
+您的系统需要以下前置条件才能成功安装 Sui。
+
+#### Rust 和 Cargo {#rust-and-cargo}
+
+Sui 在所有支持的操作系统上都需要 Rust 和 Cargo（Rust 的包管理器）。安装 Rust 的建议方法是使用 `rustup` 和 cURL。
+
+安装说明中的其他一些命令也需要 cURL 才能运行。如果您无法运行 cURL 命令来安装 Rust，请在安装 Rust 之前查看以下部分中针对您操作系统的 cURL 安装说明。
+
+在 macOS 或 Linux 上使用以下命令安装 Rust 和 Cargo：
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+如果您使用 Windows 11，请参阅 Rust 网站上关于使用 [Rust 安装程序](https://www.rust-lang.org/tools/install)的信息。安装程序会检查 C++ 构建工具，如果需要则提示您安装它们。选择最适合您环境的选项，并按照安装向导中的说明操作。
+
+有关其他安装选项，请参阅[安装 Rust](https://www.rust-lang.org/tools/install)。
+
+Sui 使用最新版本的 Cargo 来构建和管理依赖项。有关更多信息，请参阅 Rust 网站上的 [Cargo 安装](https://doc.rust-lang.org/cargo/getting-started/installation.html)页面。
+
+使用以下命令通过 `rustup` 更新 Rust：
+
+```bash
+rustup update stable
+```
+
+#### 按操作系统的其他前置条件
+
+选择相应的标签查看您系统的要求。
+
+<Tabs groupId="operating-systems">
+
+<TabItem value="linux" label="Linux">
+Linux 操作系统所需的前置条件包括：
+
+- cURL
+- Rust 和 Cargo
+- Git CLI
+- CMake
+- GCC
+- libssl-dev
+- libclang-dev
+- libpq-dev (可选)
+- build-essential
+
+:::info
+
+Linux 安装说明假设使用的是带有 APT 包管理器的发行版。如果使用其他包管理器，您可能需要调整相应的安装命令。
+
+:::
+
+安装本节列出的前置条件。使用以下命令更新 `apt-get`：
+
+```bash
+sudo apt-get update
+```
+
+#### 所有 Linux 前置条件
+
+参考后面的相关部分分别安装每个前置条件，或者运行以下命令一次性安装所有内容：
+
+{@include: ../../../snippets/linux-deps.mdx}
+
+#### cURL {#curl}
+
+使用以下命令安装 cURL：
+
+```bash
+sudo apt-get install curl
+```
+
+使用以下命令验证 cURL 是否正确安装：
+
+```bash
+curl --version
+```
+
+#### Git CLI {#git-cli}
+
+运行以下命令安装 Git，包括 [Git CLI](https://cli.github.com/)：
+
+```bash
+sudo apt-get install git-all
+```
+
+更多信息，请参阅 GitHub 网站上的[在 Linux 上安装 Git](https://github.com/git-guides/install-git#install-git-on-linux)。
+
+#### CMake {#cmake}
+
+使用以下命令安装 CMake：
+
+```bash
+sudo apt-get install cmake
+```
+
+要自定义安装，请参阅 CMake 网站上的[安装 CMake](https://cmake.org/install/)。
+
+#### GCC {#gcc}
+
+使用以下命令安装 GNU 编译器集合 `gcc`：
+
+```bash
+sudo apt-get install gcc
+```
+
+#### libssl-dev {#libssl-dev}
+
+使用以下命令安装 `libssl-dev`：
+
+```bash
+sudo apt-get install libssl-dev
+```
+
+如果您使用的 Linux 版本不支持 `libssl-dev`，可以在 [ROS Index](https://index.ros.org/d/libssl-dev/) 上找到相应的等效包。
+
+（可选）如果您安装了 OpenSSL，可能还需要安装 `pkg-config`：
+
+```bash
+sudo apt-get install pkg-config
+```
+
+#### libclang-dev {#libclang-dev}
+
+使用以下命令安装 `libclang-dev`：
+
+```bash
+sudo apt-get install libclang-dev
+```
+
+如果您使用的 Linux 版本不支持 `libclang-dev`，可以在 [ROS Index](https://index.ros.org/d/libclang-dev/) 上找到相应的等效包。
+
+#### libpq-dev（可选） {#libpq-dev}
+
+{@include: ../../../snippets/libpq-req.mdx}
+
+使用以下命令安装 `libpq-dev`：
+
+```bash
+sudo apt-get install libpq-dev
+```
+
+如果您使用的 Linux 版本不支持 `libpq-dev`，可以在 [ROS Index](https://index.ros.org/d/libpq-dev/) 上找到相应的等效包。
+
+#### build-essential {#build-essential}
+
+使用以下命令安装 `build-essential`：
+
+```bash
+sudo apt-get install build-essential
+```
+
+</TabItem>
+
+
+{/* 
+---
 title: Install Sui
 description: Install the Sui framework and required prerequisites on your system, including the Sui command line interface to interact with the Sui network.
 ---
@@ -426,3 +731,4 @@ Now that you have Sui installed, it's time to start developing. Check out the fo
 - [Learn about the available networks](./connect.mdx) and connect to one.
 - [Get some coins](./get-coins.mdx) on a development network.
 - [Build your first dApp](../first-app.mdx) to start your on-chain journey.
+*/}

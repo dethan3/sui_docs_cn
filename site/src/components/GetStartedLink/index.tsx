@@ -11,7 +11,8 @@ export default function GetStartedLink() {
     <>
       {location.pathname === "/" && (
         <Link to="/guides#get-started-developing-on-sui" className="button-cta">
-          Get started
+          {/* Get started */}
+          马上开始
         </Link>
       )}
     </>

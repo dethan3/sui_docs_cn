@@ -13,9 +13,10 @@ require("dotenv").config();
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Sui Documentation",
+  title: "Sui 文档",
   tagline:
-    "Sui is a next-generation smart contract platform with high throughput, low latency, and an asset-oriented programming model powered by Move",
+    // "Sui is a next-generation smart contract platform with high throughput, low latency, and an asset-oriented programming model powered by Move",
+    "Sui 是新一代智能合约平台，具有高吞吐量、低延迟的特点，并采用了基于 Move 语言的面向资产编程模型",
   favicon: "/img/favicon.ico",
 
   // Set the production url of your site here
@@ -198,26 +199,26 @@ const config = {
         },
       },
       navbar: {
-        title: "Sui Documentation",
+        title: "Sui 中文文档",
         logo: {
           alt: "Sui Docs Logo",
           src: "img/sui-logo.svg",
         },
         items: [
           {
-            label: "Guides",
+            label: "指南",
             to: "guides",
           },
           {
-            label: "Concepts",
+            label: "核心概念",
             to: "concepts",
           },
           {
-            label: "Standards",
+            label: "标准规范",
             to: "standards",
           },
           {
-            label: "References",
+            label: "资源",
             to: "references",
           },
 
@@ -241,7 +242,7 @@ const config = {
           href: "https://sui.io",
         },
         style: "dark",
-        copyright: `© ${new Date().getFullYear()} Sui Foundation | Documentation distributed under <a href="https://github.com/MystenLabs/sui/blob/main/docs/site/LICENSE">CC BY 4.0</a>`,
+        copyright: `© ${new Date().getFullYear()} Sui 基金会 | 文档分发于 <a href="https://github.com/MystenLabs/sui/blob/main/docs/site/LICENSE">CC BY 4.0</a>`,
       },
       prism: {
         theme: themes.github,

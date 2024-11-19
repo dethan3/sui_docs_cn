@@ -1,4 +1,61 @@
 ---
+title: 快速入门
+---
+
+Sui 是第一个互联网规模的可编程区块链平台。这可能听起来像营销用语，但当你浏览文档了解这项技术时，你会发现 Sui 解决了许多阻碍区块链大规模采用的问题。
+
+在开始在 Sui 上进行开发之前，你需要了解代码库并安装其二进制文件。
+
+## 安装 Sui
+
+{@include: ../../snippets/quick-install.mdx}
+
+你也可以通过二进制文件或源代码安装 Sui，详细内容请参见安装 Sui 页面。
+
+前往[安装 Sui](./getting-started/sui-install.mdx)。
+
+## 安装 Sui 后
+
+在系统上安装 Sui 后，你可以开始连接网络并发布智能合约。
+
+- [连接到 Sui 网络](./getting-started/connect.mdx)
+- [连接到本地网络](./getting-started/local-network.mdx)
+- [获取 Sui 地址](./getting-started/get-address.mdx)
+- [获取 SUI 代币](./getting-started/get-coins.mdx)
+
+## GraphQL 查询
+
+使用 Sui RPC 的 GraphQL 服务与链上数据交互。
+
+前往[使用 GraphQL 查询 Sui RPC](./getting-started/graphql-rpc.mdx)。
+
+## Move IDE 和插件
+
+下表列出了已验证的带有 Move 扩展的 IDE 选择。这些 IDE 和插件不是必需的，但它们能为 Sui 开发提供更好的体验。
+
+| IDE | Move 插件 | 描述 |
+| --- | ------ | ----------- |
+| [Visual Studio Code](https://code.visualstudio.com/) | &bull; [Move 扩展](https://marketplace.visualstudio.com/items?itemName=mysten.move)<br/>&bull; [Move 语法](https://marketplace.visualstudio.com/items?itemName=damirka.move-syntax) | 来自微软的推荐免费 IDE，用于 Move 开发。 |
+| [IntelliJ IDEA](https://www.jetbrains.com/idea/) | [Move 语言插件](https://plugins.jetbrains.com/plugin/14721-move-language) | JetBrains 的商业 IDE。 |
+| [Emacs](https://www.gnu.org/software/emacs/) | [move-mode](https://github.com/amnn/move-mode) | 一个免费开源的文本编辑器。 |
+| [Github Codespaces](https://github.com/features/codespaces) | [Move 语法](https://marketplace.visualstudio.com/items?itemName=damirka.move-syntax) | GitHub 的基于 Web 的 IDE。 |
+
+:::info 
+
+某些插件可能尚未提供对 [Move 2024](./advanced/move-2024-migration.mdx) 的语法高亮支持。
+
+:::
+
+## 相关链接
+
+在安装 Sui 并设置开发环境后，使用以下部分的信息继续你的开发之旅。
+
+- [应用示例](./app-examples.mdx)：一系列端到端示例，可以为你的项目提供灵感。
+- [Sui 基础知识](./sui-101.mdx)：刚开始在 Sui 上开发时应该了解的主题。
+- [高级主题](./advanced.mdx)：在开始解决更复杂问题时可能会用到的主题。
+- [密码学](./cryptography.mdx)：利用密码学函数为你的智能合约操作提供安全保障。
+
+{/* ---
 title: Getting Started
 ---
 
@@ -53,4 +110,4 @@ After installing Sui and setting up your development environment, use the inform
 - [App Examples](./app-examples.mdx): A mix of end-to-end examples that you can draw inspiration from in your own projects.
 - [Sui 101](./sui-101.mdx): Topics that you should know when just starting out to develop on Sui.
 - [Advanced Topics](./advanced.mdx): Topics that you might not find beneficial until you start solving more complex problems.
-- [Cryptography](./cryptography.mdx): Leverage cryptography functions to provide security for your smart contract actions. 
+- [Cryptography](./cryptography.mdx): Leverage cryptography functions to provide security for your smart contract actions.  */}
